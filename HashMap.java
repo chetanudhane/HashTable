@@ -1,25 +1,47 @@
 package hashtable;
 
+import java.util.ArrayList;
+
 public class HashMap<K, V> {
 
-	LinkedList<K> linkedList;
+	private final int numOfBuckets;
+	ArrayList<LinkedList<K>> myBucketArray;
 
 	public HashMap() {
-		this.linkedList = new LinkedList<>();
+		this.numOfBuckets = 10;
+		this.myBucketArray = new ArrayList<>(numOfBuckets);
+		for (int i = 0; i < numOfBuckets; i++)
+			this.myBucketArray.add(null);
+	}
+
+	private int getBucketIndex(K key) {
+		int hashCode = Math.abs(key.hashCode());
+		int index = hashCode % numOfBuckets;
+		return index;
 	}
 
 	public V get(K key) {
+		int index = this.getBucketIndex(key);
+		LinkedList<K> myList = this.myBucketArray.get(index);
+		if (myList == null)
+			return null;
 		@SuppressWarnings("unchecked")
-		MyMapNode<K, V> myMapNode = (MyMapNode<K, V>) this.linkedList.search(key);
+		MyMapNode<K, V> myMapNode = (MyMapNode<K, V>) myList.search(key);
 		return (myMapNode == null) ? null : myMapNode.getValue();
 	}
 
 	public void add(K key, V value) {
+		int index = this.getBucketIndex(key);
+		LinkedList<K> myLinkedList = this.myBucketArray.get(index);
+		if (myLinkedList == null) {
+			myLinkedList = new LinkedList<>();
+			this.myBucketArray.set(index, myLinkedList);
+		}
 		@SuppressWarnings("unchecked")
-		MyMapNode<K, V> myMapNode = (MyMapNode<K, V>) this.linkedList.search(key);
+		MyMapNode<K, V> myMapNode = (MyMapNode<K, V>) myLinkedList.search(key);
 		if (myMapNode == null) {
-			myMapNode = new MyMapNode<K, V>(key, value);
-			this.linkedList.append(myMapNode);
+			myMapNode = new MyMapNode<>(key, value);
+			myLinkedList.append(myMapNode);
 		} else {
 			myMapNode.setValue(value);
 		}
@@ -27,7 +49,7 @@ public class HashMap<K, V> {
 
 	@Override
 	public String toString() {
-		return "MyHashMap [linkedList = " + linkedList + "]";
+		return "HashMap [numOfBuckets=" + numOfBuckets + ", myBucketArray=" + myBucketArray + "]";
 	}
 
 }

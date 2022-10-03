@@ -30,15 +30,15 @@ public class MyMapNode<K, V> implements INode<K> {
 		this.key = key;
 	}
 
-	@Override
-	public INode<K> getNext() {
-		return next;
-	}
-
 	@SuppressWarnings("unchecked")
 	@Override
 	public void setNext(INode<K> next) {
 		this.next = (MyMapNode<K, V>) next;
+	}
+
+	@Override
+	public INode<K> getNext() {
+		return next;
 	}
 
 	@Override
