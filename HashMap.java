@@ -47,6 +47,15 @@ public class HashMap<K, V> {
 		}
 	}
 
+	public void removeKey(K key) {
+		int index = this.getBucketIndex(key);
+		LinkedList<K> myLinkedList = this.myBucketArray.get(index);
+		@SuppressWarnings({ "unused", "unchecked" })
+		MyMapNode<K, V> myMapNode = (MyMapNode<K, V>) myLinkedList.search(key);
+		myLinkedList.delete(key);
+		myBucketArray.remove(index);
+	}
+
 	@Override
 	public String toString() {
 		return "HashMap [numOfBuckets=" + numOfBuckets + ", myBucketArray=" + myBucketArray + "]";
